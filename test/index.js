@@ -21,23 +21,23 @@ describe('Bot Tests', () => {
   });
   */
 
-    it('create alarm',async function (done) {
-        this.timeout(15000);
-        var connector = new builder.ConsoleConnector();
+  it('create alarm', function (done) { 
+    var connector = new builder.ConsoleConnector();
+    this.timeout(100000);
+    var bot = testBot.create(connector);       
+    common.testBot(bot, connector, setAlarmMessages, done);
 
-        var bot = testBot.create(connector);
-        common.testBot(bot, connector, setAlarmMessages, done);
-    });
+  });
 
-    /*
-    it('create alarm test func', function (done) {
-        // Increasing timeout to enable alarms to show
-        this.timeout(20000);
-  
-        var connector = new builder.ConsoleConnector();
-  
-        var bot = testBot.create(connector);       
-        common.testBot(bot, setAlarmMessages2, done);
-    });
-    */
+  /*
+  it('create alarm test func', function (done) {
+      // Increasing timeout to enable alarms to show
+      this.timeout(20000);
+
+      var connector = new builder.ConsoleConnector();
+
+      var bot = testBot.create(connector);       
+      common.testBot(bot, setAlarmMessages2, done);
+  });
+  */
 });

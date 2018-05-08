@@ -1,58 +1,40 @@
 var assert = require('assert');
-
+var jquery = require('jquery');
 /**
  * 
  * @param {*} bot 
  * @param {*} messages 
  * @param {*} done 
  */
-async function testBot(bot, connector, messages, done) {
-  var response = true;
-  console.log("**************** TEST BOT");
+var step = 0;
+var response = true;
 
-  /**
-   * Inicio de la conversacion del bot 
-   */
-  var step = 0;
+function testBot(bot, connector, messages, done) {
+  
+  console.log("***TEST BOT***");
 
-  messages.forEach(m => {
-    console.log(JSON.stringify(m));
-    connector.processMessage(m.in);
-    
-  });
-  console.log("ASSERT: " + response);
-  assert(response);
+  function sendMessage(){
+    connector.processMessage(messages[step].in);
+  }
 
-
-
-  /**
-   * Evento gatillado al enviarse el primer mensaje
-   */
-  bot.on('send', function (message) {
-    console.log("send");
-    var check = messages[step];
-    console.log(JSON.stringify(check));
-
-    if(!check){
+  bot.on('send',  function(message){
+    var check = messages[step++];
+    if (check.out) {
+      console.log(message.text + " == " + check.out +":"+ (message.text==check.out));
+      response = (message.text == check.out);
+    }
+    if (messages.length>step && response){
+      sendMessage();
+    }else{ 
       done();
     }
-
-    if (check.out) {
-      console.log(message.text + " == " + check.out);
-      if (message.text != check.out) {
-        console.log();
-        response = false;
-      }
-    }
-    step++;
-
   });
-
+  
+  sendMessage();
+  assert(response);
 }
 
-/**
- * 
- */
+
 module.exports = {
   testBot
 };
